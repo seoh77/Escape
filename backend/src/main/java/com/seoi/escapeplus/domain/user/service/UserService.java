@@ -8,9 +8,9 @@ import com.seoi.escapeplus.domain.auth.entity.UserAuth;
 import com.seoi.escapeplus.domain.auth.repository.UserAuthRepository;
 import com.seoi.escapeplus.domain.user.dto.UserJoinRequestDto;
 import com.seoi.escapeplus.domain.user.entity.User;
-import com.seoi.escapeplus.domain.user.exception.UserExceptionCode;
+import com.seoi.escapeplus.domain.user.exception.UserErrorCode;
 import com.seoi.escapeplus.domain.user.repository.UserRepository;
-import com.seoi.escapeplus.global.exception.CustomException;
+import com.seoi.escapeplus.global.exception.BusinessException;
 import com.seoi.escapeplus.global.util.DateTimeUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -60,13 +60,13 @@ public class UserService {
 
 	private void checkDuplicateNickname(String nickname) {
 		if (userRepository.existsByNickname(nickname)) {
-			throw new CustomException(UserExceptionCode.Duplicate_EMAIL);
+			throw new BusinessException(UserErrorCode.Duplicate_EMAIL);
 		}
 	}
 
 	private void checkDuplicateEmail(String email) {
 		if (userRepository.existsByEmail(email)) {
-			throw new CustomException(UserExceptionCode.Duplicate_Nickname);
+			throw new BusinessException(UserErrorCode.Duplicate_Nickname);
 		}
 	}
 }
