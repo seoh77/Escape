@@ -2,6 +2,7 @@ package com.seoi.escapeplus.global.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -23,6 +24,22 @@ public class GlobalExceptionHandler {
 			.build();
 
 		return new ResponseEntity<>(response, errorCode.getHttpStatus());
+	}
+
+	// @Valid를 사용하여 데이터 유효성 검사를 할 때, 검증 실패시 MethodArgumentNotValidException 발생
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+		log.error("MethodArgumentNotValidException", e);
+
+		String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+
+		ErrorResponse response = ErrorResponse.builder()
+			.code("INVALID_INPUT_VALUE")
+			.message(message)
+			.status(400)
+			.build();
+
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(Exception.class)
