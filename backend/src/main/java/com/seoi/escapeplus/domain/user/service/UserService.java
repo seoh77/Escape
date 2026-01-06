@@ -24,7 +24,6 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final UserAuthRepository userAuthRepository;
 
-	private final DateTimeUtil dateTimeUtil;
 	private final PasswordEncoder passwordEncoder;
 
 	@Transactional
@@ -38,7 +37,7 @@ public class UserService {
 		// User 엔티티 생성 및 저장
 		User user = User.builder()
 			.name(requestDto.getName())
-			.birthday(dateTimeUtil.replaceStringWithLocalDate(requestDto.getBirthday()))
+			.birthday(DateTimeUtil.replaceStringWithLocalDate(requestDto.getBirthday()))
 			.email(requestDto.getEmail())
 			.phoneNumber(requestDto.getPhoneNumber())
 			.nickname(requestDto.getNickname())
