@@ -1,6 +1,7 @@
 package com.seoi.escapeplus.domain.user.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,8 @@ import com.seoi.escapeplus.domain.user.dto.response.CheckDuplicateResponse;
 import com.seoi.escapeplus.domain.user.service.UserService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
+@Validated
 public class UserController {
 
 	private final UserService userService;
@@ -35,7 +39,7 @@ public class UserController {
 	}
 
 	@GetMapping("/check/id")
-	public CheckDuplicateResponse checkId(@RequestParam String id) {
+	public CheckDuplicateResponse checkId(@RequestParam @NotBlank String id) {
 		if (userAuthService.checkDuplicateLoginId(id)) {
 			return CheckDuplicateResponse.unavailable("이미 사용 중인 아이디입니다.");
 		}
@@ -44,7 +48,7 @@ public class UserController {
 	}
 
 	@GetMapping("/check/email")
-	public CheckDuplicateResponse checkEmail(@RequestParam String email) {
+	public CheckDuplicateResponse checkEmail(@RequestParam @NotBlank @Email String email) {
 		if (userService.checkDuplicateEmail(email)) {
 			return CheckDuplicateResponse.unavailable("이미 사용 중인 이메일입니다.");
 		}
@@ -53,7 +57,7 @@ public class UserController {
 	}
 
 	@GetMapping("/check/nickname")
-	public CheckDuplicateResponse checkNickname(@RequestParam String nickname) {
+	public CheckDuplicateResponse checkNickname(@RequestParam @NotBlank String nickname) {
 		if (userService.checkDuplicateNickname(nickname)) {
 			return CheckDuplicateResponse.unavailable("이미 사용 중인 닉네임입니다");
 		}

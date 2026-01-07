@@ -10,6 +10,7 @@ import com.seoi.escapeplus.global.dto.ApiResponse;
 import com.seoi.escapeplus.global.exception.BusinessException;
 import com.seoi.escapeplus.global.exception.ErrorCode;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -30,9 +31,21 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	protected ResponseEntity<ApiResponse<Void>> handleMethodArgumentNotValidException(
 		MethodArgumentNotValidException e) {
-		log.error("MethodArgumentNotValidException", e);
+		log.error("MethodArgumentNotValidException: ", e);
 
 		String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+		ApiResponse<Void> response = ApiResponse.of(HttpStatus.BAD_REQUEST, "INVALID_INPUT", message, null);
+
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+
+	// @RequestParam 검증 실패 시 발생하는 ConstraintViolationException 예외 처리
+	@ExceptionHandler(ConstraintViolationException.class)
+	protected ResponseEntity<ApiResponse<Void>> handleConstraintViolationException(
+		ConstraintViolationException e) {
+		log.error("ConstraintViolationException: ", e);
+
+		String message = e.getConstraintViolations().iterator().next().getMessage();
 		ApiResponse<Void> response = ApiResponse.of(HttpStatus.BAD_REQUEST, "INVALID_INPUT", message, null);
 
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
