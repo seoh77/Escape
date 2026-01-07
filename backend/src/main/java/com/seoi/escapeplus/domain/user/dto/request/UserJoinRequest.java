@@ -2,6 +2,8 @@ package com.seoi.escapeplus.domain.user.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,8 +15,12 @@ public class UserJoinRequest {
 	// private LoginType loginType;
 
 	@NotBlank(message = "아이디는 필수 입력 값입니다.")
+	@Size(min = 5, max = 15, message = "아이디는 5자 이상 15자 이하로 입력해주세요.")
+	@Pattern(regexp = "^[a-zA-Z0-9]*$", message = "아이디는 영어와 숫자만 입력 가능합니다.")
 	private String loginId;
 
+	@Size(min = 5, max = 15, message = "비밀번호는 5자 이상 15자 이하로 입력해주세요.")
+	@Pattern(regexp = "^[a-zA-Z0-9!@*~$%]*$", message = "비밀번호는 영어, 숫자, 특수문자(!, @, *, ~, $, %)만 입력 가능합니다.")
 	private String password;
 
 	@NotBlank(message = "이름은 필수 입력 값입니다.")
