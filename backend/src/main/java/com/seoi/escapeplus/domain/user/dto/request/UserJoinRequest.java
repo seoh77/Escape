@@ -1,4 +1,4 @@
-package com.seoi.escapeplus.domain.user.dto;
+package com.seoi.escapeplus.domain.user.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UserJoinRequestDto {
+public class UserJoinRequest {
 
 	// @NotBlank(message = "로그인 타입은 필수 입력 값입니다.")
 	// private LoginType loginType;
