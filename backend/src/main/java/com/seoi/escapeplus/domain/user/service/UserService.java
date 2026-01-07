@@ -60,13 +60,13 @@ public class UserService {
 
 	private void checkDuplicateNickname(String nickname) {
 		if (userRepository.existsByNickname(nickname)) {
-			throw new BusinessException(UserErrorCode.Duplicate_EMAIL);
+			throw new BusinessException(UserErrorCode.DUPLICATE_EMAIL);
 		}
 	}
 
 	private void checkDuplicateEmail(String email) {
 		if (userRepository.existsByEmail(email)) {
-			throw new BusinessException(UserErrorCode.Duplicate_Nickname);
+			throw new BusinessException(UserErrorCode.DUPLICATE_NICKNAME);
 		}
 	}
 }

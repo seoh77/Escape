@@ -11,8 +11,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum UserErrorCode implements ErrorCode {
 
-	Duplicate_EMAIL("이미 사용 중인 이메일입니다.", HttpStatus.BAD_REQUEST),
-	Duplicate_Nickname("이미 사용 중인 닉네임입니다.", HttpStatus.BAD_REQUEST);
+	DUPLICATE_EMAIL("이미 사용 중인 이메일입니다.", HttpStatus.BAD_REQUEST),
+	DUPLICATE_NICKNAME("이미 사용 중인 닉네임입니다.", HttpStatus.BAD_REQUEST);
 
 	private final String message;
 	private final HttpStatus httpStatus;
