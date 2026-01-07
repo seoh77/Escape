@@ -48,9 +48,6 @@ public class UserAuth extends BaseTimeEntity {
 
 	private LocalDateTime pwUpdateTime;
 
-	/**
-	 * 자체 로그인
-	 */
 	@Builder
 	private UserAuth(User user, LoginType loginType, String loginId, String password) {
 		this.user = user;

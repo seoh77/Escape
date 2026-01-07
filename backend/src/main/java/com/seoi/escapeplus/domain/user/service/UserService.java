@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.seoi.escapeplus.domain.auth.entity.LoginType;
 import com.seoi.escapeplus.domain.auth.entity.UserAuth;
 import com.seoi.escapeplus.domain.auth.repository.UserAuthRepository;
 import com.seoi.escapeplus.domain.user.dto.UserJoinRequestDto;
@@ -49,7 +50,7 @@ public class UserService {
 		// UserAuth 엔티티 생성 및 저장
 		UserAuth userAuth = UserAuth.builder()
 			.user(savedUser)
-			.loginType(requestDto.getLoginType())
+			.loginType(LoginType.LOCAL)
 			.loginId(requestDto.getLoginId())
 			.password(passwordEncoder.encode(requestDto.getPassword()))
 			.build();
