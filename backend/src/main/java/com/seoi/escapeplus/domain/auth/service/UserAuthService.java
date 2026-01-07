@@ -34,6 +34,11 @@ public class UserAuthService {
 		userAuthRepository.save(userAuth);
 	}
 
+	/**
+	 * 로그인 아이디 중복확인
+	 * @param loginId
+	 * @return
+	 */
 	public boolean checkDuplicateLoginId(String loginId) {
 		return userAuthRepository.existsByLoginId(loginId);
 	}

@@ -71,7 +71,7 @@ public class UserService {
 	 * @param nickname
 	 * @return
 	 */
-	private boolean checkDuplicateNickname(String nickname) {
+	public boolean checkDuplicateNickname(String nickname) {
 		return userRepository.existsByNickname(nickname);
 	}
 
@@ -80,7 +80,7 @@ public class UserService {
 	 * @param email
 	 * @return
 	 */
-	private boolean checkDuplicateEmail(String email) {
+	public boolean checkDuplicateEmail(String email) {
 		return userRepository.existsByEmail(email);
 	}
 }

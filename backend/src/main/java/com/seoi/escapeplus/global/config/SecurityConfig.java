@@ -28,7 +28,8 @@ public class SecurityConfig {
 				session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			// 5. 요청에 대한 권한 관리
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/api/users/join").permitAll()
+				// 인증 없이 접근 가능한 공개 API
+				.requestMatchers("/api/**").permitAll()
 				.anyRequest().authenticated()
 			);
 
