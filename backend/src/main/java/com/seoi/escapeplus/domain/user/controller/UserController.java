@@ -37,27 +37,27 @@ public class UserController {
 	@GetMapping("/check/id")
 	public CheckDuplicateResponse checkId(@RequestParam String id) {
 		if (userAuthService.checkDuplicateLoginId(id)) {
-			return new CheckDuplicateResponse(false, "이미 사용 중인 아이디입니다.");
+			return CheckDuplicateResponse.unavailable("이미 사용 중인 아이디입니다.");
 		}
 
-		return new CheckDuplicateResponse(true, "사용 가능한 아이디입니다.");
+		return CheckDuplicateResponse.available("사용 가능한 아이디입니다.");
 	}
 
 	@GetMapping("/check/email")
 	public CheckDuplicateResponse checkEmail(@RequestParam String email) {
 		if (userService.checkDuplicateEmail(email)) {
-			return new CheckDuplicateResponse(false, "이미 사용 중인 이메일입니다.");
+			return CheckDuplicateResponse.unavailable("이미 사용 중인 이메일입니다.");
 		}
 
-		return new CheckDuplicateResponse(true, "사용 가능한 이메일입니다.");
+		return CheckDuplicateResponse.available("사용 가능한 이메일입니다.");
 	}
 
 	@GetMapping("/check/nickname")
 	public CheckDuplicateResponse checkNickname(@RequestParam String nickname) {
 		if (userService.checkDuplicateNickname(nickname)) {
-			return new CheckDuplicateResponse(false, "이미 사용 중인 닉네임입니다");
+			return CheckDuplicateResponse.unavailable("이미 사용 중인 닉네임입니다");
 		}
 
-		return new CheckDuplicateResponse(true, "사용 가능한 닉네임입니다.");
+		return CheckDuplicateResponse.available("사용 가능한 닉네임입니다.");
 	}
 }
