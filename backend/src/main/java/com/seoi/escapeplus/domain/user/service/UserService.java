@@ -1,12 +1,10 @@
 package com.seoi.escapeplus.domain.user.service;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.seoi.escapeplus.domain.auth.entity.LoginType;
-import com.seoi.escapeplus.domain.auth.entity.UserAuth;
-import com.seoi.escapeplus.domain.auth.repository.UserAuthRepository;
+import com.seoi.escapeplus.domain.auth.exception.UserAuthErrorCode;
+import com.seoi.escapeplus.domain.auth.service.UserAuthService;
 import com.seoi.escapeplus.domain.user.dto.request.UserJoinRequest;
 import com.seoi.escapeplus.domain.user.entity.User;
 import com.seoi.escapeplus.domain.user.exception.UserErrorCode;
@@ -20,20 +18,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 
 	private final UserRepository userRepository;
-	private final UserAuthRepository userAuthRepository;
 
-	private final PasswordEncoder passwordEncoder;
+	private final UserAuthService userAuthService;
 
 	@Transactional
 	public void join(UserJoinRequest request) {
-		// 이메일 중복체크
-		checkDuplicateEmail(request.getEmail());
-
-		// 닉네임 중복체크
-		checkDuplicateNickname(request.getNickname());
+		validateDuplicateJoinInfo(request);
 
 		// User 엔티티 생성 및 저장
 		User user = User.builder()
@@ -48,25 +42,45 @@ public class UserService {
 		User savedUser = userRepository.save(user);
 
 		// UserAuth 엔티티 생성 및 저장
-		UserAuth userAuth = UserAuth.builder()
-			.user(savedUser)
-			.loginType(LoginType.LOCAL)
-			.loginId(request.getLoginId())
-			.password(passwordEncoder.encode(request.getPassword()))
-			.build();
-
-		userAuthRepository.save(userAuth);
+		userAuthService.save(savedUser, request.getLoginId(), request.getPassword());
 	}
 
-	private void checkDuplicateNickname(String nickname) {
-		if (userRepository.existsByNickname(nickname)) {
+	/**
+	 * 아이디, 이메일, 닉네임 중복 확인
+	 * @param request
+	 */
+	private void validateDuplicateJoinInfo(UserJoinRequest request) {
+		// 아이디 중복체크
+		if (userAuthService.checkDuplicateLoginId(request.getLoginId())) {
+			throw new BusinessException(UserAuthErrorCode.DUPLICATE_LOGINID);
+		}
+
+		// 이메일 중복체크
+		if (checkDuplicateEmail(request.getEmail())) {
 			throw new BusinessException(UserErrorCode.DUPLICATE_EMAIL);
 		}
-	}
 
-	private void checkDuplicateEmail(String email) {
-		if (userRepository.existsByEmail(email)) {
+		// 닉네임 중복체크
+		if (checkDuplicateNickname(request.getNickname())) {
 			throw new BusinessException(UserErrorCode.DUPLICATE_NICKNAME);
 		}
+	}
+
+	/**
+	 * 닉네임 중복 확인
+	 * @param nickname
+	 * @return
+	 */
+	private boolean checkDuplicateNickname(String nickname) {
+		return userRepository.existsByNickname(nickname);
+	}
+
+	/**
+	 * 이메일 중복 확인
+	 * @param email
+	 * @return
+	 */
+	private boolean checkDuplicateEmail(String email) {
+		return userRepository.existsByEmail(email);
 	}
 }
